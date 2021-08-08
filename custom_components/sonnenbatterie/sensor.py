@@ -12,6 +12,11 @@ from homeassistant.helpers.entity import Entity
 # pylint: disable=no-name-in-module
 from sonnenbatterie import sonnenbatterie 
 # pylint: enable=no-name-in-module
+from homeassistant.util import dt
+
+from homeassistant.components.sensor import (
+    STATE_CLASS_MEASUREMENT,
+)
 
 from homeassistant.const import (
     CONF_PASSWORD,
@@ -19,6 +24,8 @@ from homeassistant.const import (
     CONF_IP_ADDRESS,
     EVENT_HOMEASSISTANT_STOP, 
     CONF_SCAN_INTERVAL,
+    DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_POWER,
 )
 
 
@@ -200,11 +207,11 @@ class SonnenBatterieMonitor:
     def _AddOrUpdateEntity(self,id,friendlyname,value,unit):
         if id in self.meterSensors:
             sensor=self.meterSensors[id]
-            #sensor.set_attributes({"unit_of_measurement":unit,"device_class":"power","state_class":"measurement","friendly_name":friendlyname})
+            #sensor.set_attributes({"unit_of_measurement":unit,"device_class":DEVICE_CLASS_ENERGY,"state_class":STATE_CLASS_MEASUREMENT, "last_reset": dt.utc_from_timestamp(0), "friendly_name":friendlyname})
             sensor.set_state(value)
         else:
             sensor=SonnenBatterieSensor(id,friendlyname)
-            sensor.set_attributes({"unit_of_measurement":unit,"device_class":"energy","state_class":"measurement","friendly_name":friendlyname})
+            sensor.set_attributes({"unit_of_measurement":unit,"device_class":DEVICE_CLASS_ENERGY,"state_class":STATE_CLASS_MEASUREMENT, "last_reset": dt.utc_from_timestamp(0), "friendly_name":friendlyname})
             self.async_add_entities([sensor])
             self.meterSensors[id]=sensor
     def AddOrUpdateEntities(self):
