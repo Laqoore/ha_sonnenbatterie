@@ -200,11 +200,11 @@ class SonnenBatterieMonitor:
     def _AddOrUpdateEntity(self,id,friendlyname,value,unit):
         if id in self.meterSensors:
             sensor=self.meterSensors[id]
-            #sensor.set_attributes({"unit_of_measurement":unit,"device_class":"power","friendly_name":friendlyname})
+            #sensor.set_attributes({"unit_of_measurement":unit,"device_class":"power","state_class":"measurement","friendly_name":friendlyname})
             sensor.set_state(value)
         else:
             sensor=SonnenBatterieSensor(id,friendlyname)
-            sensor.set_attributes({"unit_of_measurement":unit,"device_class":"power","friendly_name":friendlyname})
+            sensor.set_attributes({"unit_of_measurement":unit,"device_class":"energy","state_class":"measurement","friendly_name":friendlyname})
             self.async_add_entities([sensor])
             self.meterSensors[id]=sensor
     def AddOrUpdateEntities(self):
